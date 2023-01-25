@@ -1,6 +1,3 @@
-// import useSyncExternalStoreExports from 'use-sync-external-store/shim/with-selector'
-// const { useSyncExternalStoreWithSelector } = useSyncExternalStoreExports
-
 import { ExternalFromScratch } from './ExternalFromScratch'
 import { ExternalWithUseSync } from './ExternalWithUseSync'
 
@@ -10,6 +7,7 @@ function App () {
   return (
     <div className='App'>
       <ExternalWithUseSync />
+      {/* <ExternalFromScratch /> */}
     </div>
   )
 }

@@ -1,30 +1,12 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import useSyncExternalStoreExports from 'use-sync-external-store/shim/with-selector'
+import { createStore } from './store'
 
 const { useSyncExternalStoreWithSelector } = useSyncExternalStoreExports
 
-// library code
-const createStore = (initialState) => {
-  let state = initialState
-  const getState = () => state
-  const listeners = new Set()
-
-  const setState = (fn) => {
-    state = fn(state)
-    listeners.forEach((listener) => listener())
-  }
-
-  const subscribe = (listener) => {
-    console.log('listener', listener)
-    listeners.add(listener)
-    return () => listeners.delete(listener)
-  }
-
-  return { getState, setState, subscribe }
-}
+const store = createStore({ count: 0, text: 'hello' })
 
 const useStore = (store, selector) => {
-  console.log('useStore')
   return useSyncExternalStoreWithSelector(
     store.subscribe,
     store.getState,
@@ -33,11 +15,8 @@ const useStore = (store, selector) => {
   )
 }
 
-// Application code
-const store = createStore({ count: 0, text: 'hello' })
-
 const Counter = () => {
-  const count = useStore(store, (state) => state.count)
+  const count = useStore(store, useCallback((state) => state.count, []))
 
   const inc = () => {
     store.setState((prev) => ({ ...prev, count: prev.count + 1 }))
@@ -56,8 +35,6 @@ export const ExternalWithUseSync = () => {
     <div className='container'>
       <Counter />
       {/* <Counter /> */}
-      {/* <TextBox />
-      <TextBox /> */}
     </div>
   )
 }
